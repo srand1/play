@@ -1,5 +1,6 @@
 // https://developer.mozilla.org/en-US/docs/Web/API/Notifications_API/Using_the_Notifications_API
-// 
+// https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Client-side_web_APIs/Client-side_storage
+
 (async () => {
 	console.log('hello');
 
