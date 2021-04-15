@@ -41,7 +41,8 @@
 	const msg = document.querySelector('#msg');
 	document.querySelector('#send').addEventListener('click', () => {
 		if (push.checked) {
-			new Notification(msg.value);
+			// new Notification(msg.value);
+			reg.showNotification(msg.value);
 		}
 	});
 
@@ -51,8 +52,9 @@
 		const now = Date();
 		append(now);
 		if (push.checked) {
-			const noti = new Notification(now);
-			setTimeout(close, after, noti);
+			// const noti = new Notification(now);
+			// setTimeout(close, after, noti);
+			reg.showNotification(now);
 		}
 	};
 	let timer = null;
