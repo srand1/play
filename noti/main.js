@@ -48,13 +48,18 @@
 
 	const interval = document.querySelector('#interval');
 	const close = noti => {noti.close();};
+	const remove = async tag => {
+		const notis = await reg.getNotifications({tag: tag});
+		notis.forEach(close);
+	};
 	const job = after => {
 		const now = Date();
 		append(now);
 		if (push.checked) {
 			// const noti = new Notification(now);
 			// setTimeout(close, after, noti);
-			reg.showNotification(now);
+			reg.showNotification(now, {tag: now});
+			setTimeout(remove, after, now);
 		}
 	};
 	let timer = null;
