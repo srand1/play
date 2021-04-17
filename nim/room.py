@@ -1,6 +1,7 @@
 import sys
 import json
 import csv
+from collections import defaultdict, Counter
 
 
 def room_json_to_csv():
@@ -32,5 +33,40 @@ def people_tsv_to_json():
     print(';')
 
 
+def inspect_store():
+    with open(sys.argv[1]) as f:
+        obj = json.load(f)
+    # keys = set()
+    roleId = Counter()
+    sessionRole = Counter()
+    for key, msg in obj.items():
+        if not key.startswith('xoxmsg-'):
+            continue
+        msg = json.loads(msg)
+        custom = msg['custom']
+        # print(custom)
+        if 'sessionRole' not in custom:
+            # print(custom)
+            continue
+        sessionRole[custom['sessionRole']] += 1
+        if custom['sessionRole'] != 0:
+            print(custom)
+        # keys.update(custom.keys())
+        if 'user' not in custom:
+            # print(custom)
+            continue
+        # print(custom['user'])
+        roleId[custom['user']['roleId']] += 1
+        if custom['user']['roleId'] == 3:
+            print(custom)
+        if 'text' not in custom:
+            # print(custom)
+            continue
+        # print(custom['text'])
+    # print(keys)
+    print(roleId)
+    print(sessionRole)
+
+
 if __name__ == '__main__':
-    people_tsv_to_json()
+    inspect_store()
