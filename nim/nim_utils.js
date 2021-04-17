@@ -18,8 +18,10 @@
 
 	const appendMsg = msg => {
 		msg.custom = JSON.parse(msg.custom);
+		if (!parseInt(msg.custom.sessionRole)) return;
 		const key = 'xoxmsg-' + localStorage.length;
 		localStorage.setItem(key, JSON.stringify(msg));
+		UI.showLatest(msg);
 		UI.updateMsg();
 	};
 	const onmsgs = msgs => msgs.forEach(appendMsg);

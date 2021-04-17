@@ -94,7 +94,15 @@
 		count.value = localStorage.length;
 		latest.value = Date();
 	};
-	UI = {updateMsg};
+	const showLatest = msg => {
+		if (msg.custom.messageType !== 'TEXT') return;
+		reg.showNotification(msg.custom.user.nickName, {
+			tag: msg.chatroomId,
+			renotify: true,
+			body: msg.custom.text,
+		});
+	};
+	UI = {updateMsg, showLatest, reg};
 
 	const dumpStorage = storage => {
 		const ans = {};
