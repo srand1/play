@@ -60,14 +60,44 @@
 	const chatroom = document.querySelector('#chatroom');
 	const fav = document.querySelector('#fav');
 	document.querySelector('#add').addEventListener('click', () => {
-		const roomId = roomIdByName[chatroom.value];
+		const roomId = roomIdByName[chatroom.value] || parseInt(chatroom.value);
 		if (!roomId) {
-			append('Room not found:', chatroom.value);
+			append('Room not found: ' + chatroom.value);
 			return;
 		}
 		const input = document.createElement('input');
 		input.type = 'checkbox';
+		let conn = null;
+		input.addEventListener('change', () => {
+			if (input.checked) {
+				console.assert(conn === null);
+				conn = NimUtils.getConn(account.value, roomId);
+			} else {
+				console.assert(conn !== null);
+				conn.destroy();
+				conn = null;
+			}
+		});
 		fav.append(buildTr([chatroom.value, roomId, input]));
 	});
+
+	const count = document.querySelector('#count');
+	const latest = document.querySelector('#latest');
+	const updateMsg = () => {
+		count.value = localStorage.length;
+		latest.value = Date();
+	};
+	UI = {updateMsg};
+
+	const dumpStorage = storage => {
+		const ans = {};
+		const l = storage.length;
+		for (let i = 0; i < l; i++) {
+			const key = storage.key(i);
+			const val = storage.getItem(key);
+			ans[key] = val;
+		}
+		return ans;
+	};
 
 })();
