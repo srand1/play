@@ -59,10 +59,10 @@
 	const account = document.querySelector('#account');
 	const chatroom = document.querySelector('#chatroom');
 	const fav = document.querySelector('#fav');
-	document.querySelector('#add').addEventListener('click', () => {
-		const roomId = roomIdByName[chatroom.value] || parseInt(chatroom.value);
+	const addFav = chatroomVal => {
+		const roomId = roomIdByName[chatroomVal] || parseInt(chatroomVal);
 		if (!roomId) {
-			append('Room not found: ' + chatroom.value);
+			append('Room not found: ' + chatroomVal);
 			return;
 		}
 		const input = document.createElement('input');
@@ -78,8 +78,15 @@
 				conn = null;
 			}
 		});
-		fav.append(buildTr([chatroom.value, roomId, input]));
+		fav.append(buildTr([chatroomVal, roomId, input]));
+	};
+	document.querySelector('#add').addEventListener('click', () => {
+		addFav(chatroom.value);
+		localStorage.setItem('config-fav', JSON.stringify(
+			JSON.parse(localStorage.getItem('config-fav') || '[]').concat(chatroom.value)
+		));
 	});
+	JSON.parse(localStorage.getItem('config-fav') || '[]').forEach(addFav);
 
 	const count = document.querySelector('#count');
 	const latest = document.querySelector('#latest');
