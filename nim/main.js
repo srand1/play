@@ -22,6 +22,17 @@
 		});
 		return tr;
 	};
+	const download = obj => {
+		const json = JSON.stringify(obj);
+		const blob = new Blob([json], {type: 'application/json'});
+		const url = URL.createObjectURL(blob);
+		console.log(url);
+		return url;
+	};
+	console.log(download);
+	const sleep = ms => new Promise((resolve, reject) => {
+		setTimeout(resolve, ms);
+	});
 
 	const push = document.querySelector('#push');
 	push.addEventListener('change', async () => {
@@ -114,5 +125,33 @@
 		}
 		return ans;
 	};
+
+	RUN = true;
+	const link = document.querySelector('#link');
+	document.querySelector('#export').addEventListener('click', async () => {
+		const ans = [];
+		let timetag;
+		let i = 0;
+		while (RUN) {
+			if (i++) await sleep(2000);
+			// console.log(i);
+			try {
+				const obj = await NimUtils.getHist(NimUtils.all[0], {timetag});
+				ans.push(...obj.msgs);
+				timetag = obj.msgs[99].time;
+			} catch (e) {
+				console.log('Err', e);
+				RUN = false;
+			}
+			console.log(
+				i, 'runs',
+				(Date.now() - timetag) / 1000 / 60 / 60, 'hrs',
+				new Date(timetag).toLocaleString(),
+			);
+		}
+		// console.log((Date.now() - timetag) / 1000 / 60 / 60, 'hrs');
+		const url = download(ans);
+		link.href = url;
+	});
 
 })();

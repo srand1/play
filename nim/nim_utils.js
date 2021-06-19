@@ -36,8 +36,10 @@
 	const getConn = (account, roomId) => {
 		const conn = SDK.Chatroom.getInstance({
 			appKey: appKey,
-			account: account,
-			token: account,
+			isAnonymous: true,
+			chatroomNick: 'RO',
+			// account: account,
+			// token: account,
 			chatroomId: roomId,
 			chatroomAddresses: chatroomAddresses,
 			// onconnect: getDummyLogger('connect'),
@@ -53,10 +55,22 @@
 		all.push(conn);
 		return conn;
 	};
+	const getHist = (conn, opts) => new Promise((resolve, reject) => {
+		// return of current func / getHistoryMsgs / reject / resolve useless
+		console.log({
+			done: (err, obj) => err ? reject(err) : resolve(obj),
+			...opts,
+		});
+		conn.getHistoryMsgs({
+			done: (err, obj) => err ? reject(err) : resolve(obj),
+			...opts,
+		});
+	});
 
 	NimUtils = {
 		getDummyLogger,
 		getConn,
 		all,
+		getHist,
 	};
 })();
