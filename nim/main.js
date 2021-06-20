@@ -132,19 +132,30 @@
 		const ans = [];
 		let timetag;
 		let i = 0;
+		let n = 0;
 		while (RUN) {
 			if (i++) await sleep(2000);
 			// console.log(i);
 			try {
 				const obj = await NimUtils.getHist(NimUtils.all[0], {timetag});
-				ans.push(...obj.msgs);
+				const selected = obj.msgs.filter(msg => {
+					if (!msg.custom) {console.log('Empty',msg);return false;}
+					const custom = JSON.parse(msg.custom);
+					return ! (
+						custom.sessionRole === 0 && custom.messageType === 'TEXT'
+						|| custom.sessionRole === 0 && custom.messageType === 'REPLY'
+						|| custom.messageType === 'DELETE'
+					);
+				});
+				ans.push(...selected);
+				n += selected.length;
 				timetag = obj.msgs[99].time;
 			} catch (e) {
 				console.log('Err', e);
 				RUN = false;
 			}
 			console.log(
-				i, 'runs',
+				i, 'runs', n, 'msgs',
 				(Date.now() - timetag) / 1000 / 60 / 60, 'hrs',
 				new Date(timetag).toLocaleString(),
 			);
